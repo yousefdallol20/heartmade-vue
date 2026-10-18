@@ -1,0 +1,124 @@
+.icon-size-22 {
+  font-size: 22px;
+}
+.margin-bottom-none {
+  margin-bottom: 0;
+}
+.margin-top-20 {
+  margin-top: 20px;
+}
+.icon-size-16 {
+  font-size: 16px;
+}
+.margin-bottom-12 {
+  margin-bottom: 12px;
+}
+.cream-panel {
+  background-color: var(--cream-4, #fbf9f6);
+}
+.icon-box-40 {
+  width: 40px;
+  height: 40px;
+}
+.admin-eyebrow {
+  letter-spacing: 0.15em;
+  color: var(--terracotta-2);
+  font-size: 10px;
+}
+.width-auto {
+  width: auto;
+}
+.display-block {
+  display: block;
+}
+.text-xs {
+  font-size: 12px;
+}
+.text-sm {
+  font-size: 14px;
+}
+.min-w-0 {
+  min-width: 0;
+}
+.py-1\.5 {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.py-2\.5 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.p-1\.5 {
+  padding: 6px;
+}
+.space-y-3 > * + * {
+  margin-top: 12px;
+}
+.transition {
+  transition: all 0.2s;
+}
+.bg-black\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+.inset-0 {
+  inset: 0;
+}
+.text-\[var\(--terracotta-2\)\] {
+  color: var(--terracotta-2);
+}
+.border-\[var\(--border-3\)\] {
+  border-color: var(--border-3);
+}
+.text-\[var\(--sage-text-2\)\] {
+  color: var(--sage-text-2);
+}
+.bg-\[\#e2f0e6\] {
+  background-color: #e2f0e6;
+}
+.bg-\[\#f0e2d9\] {
+  background-color: #f0e2d9;
+}
+.border-\[var\(--border-2\)\] {
+  border-color: var(--border-2);
+}
+.text-\[var\(--gray-warm-5\)\] {
+  color: var(--gray-warm-5);
+}
+.bg-\[\#fae8e6\] {
+  background-color: #fae8e6;
+}
+.text-\[var\(--sage-text\)\] {
+  color: var(--sage-text);
+}
+.bg-\[var\(--rose-icon\)\] {
+  background-color: var(--rose-icon);
+}
+.vue-modal {
+  z-index: 1055;
+}
+.notice-toast {
+  z-index: 2000;
+}
+.notice-toast > i {
+  color: var(--rose-icon);
+  font-size: 14px;
+}
+.pd-thumb-box {
+  padding: 0;
+  background: none;
+}
+.soon-tag {
+  margin-inline-start: 4px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.08);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+button:focus-visible,
+a:focus-visible,
+[role="link"]:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 3px;
+}
