@@ -1,6 +1,8 @@
 const backendUrl = (
   import.meta.env.VITE_BACKEND_URL || "http://localhost:8000"
-).trim().replace(/\/+$/, "");
+)
+  .trim()
+  .replace(/\/+$/, "");
 
 function createError(message, status = 0, errors = {}) {
   const error = new Error(message);
@@ -30,7 +32,7 @@ function csrfToken() {
   }
 }
 
-// استخدام رسائل ثابتة بدل عرض تفاصيل السيرفر أو دمج أخطاء الحقول.
+// Return safe messages instead of exposing technical server details.
 function validationMessage(field) {
   const key = String(field).toLowerCase();
 
@@ -124,9 +126,63 @@ function safeValidationErrors(errors) {
 
   return Object.fromEntries(
     Object.keys(errors)
-      .filter((field) => /^[a-zA-Z0-9_.-]{1,100}$/.test(field))
+      .filter((field) =>
+        /^[a-zA-Z0-9_.-]{1,100}$/.test(field),
+      )
       .slice(0, 30)
-      .map((field) => [field, [validationMessage(field)]]),
+      .map((field) => {
+        const values = Array.isArray(errors[field])
+          ? errors[field]
+          : [errors[field]];
+
+        const allowed = new Set([
+          "This field is required.",
+          "Please enter a valid product name.",
+          "The name must not exceed 255 characters.",
+          "Please enter a valid price.",
+          "Use no more than two decimal places.",
+          "The price must be zero or greater.",
+          "The price must not exceed 9999999999.99.",
+          "Stock must be a whole number.",
+          "Stock must be zero or greater.",
+          "Stock must not exceed 4294967295.",
+          "Please select a valid category.",
+          "The category must not exceed 255 characters.",
+          "The short summary must not exceed 255 characters.",
+          "Dimensions must not exceed 255 characters.",
+          "What's included must not exceed 10000 characters.",
+          "A product can have no more than 10 images in total.",
+          "Choose a valid JPG, PNG, or WebP image.",
+          "Each image must not exceed 4 MB.",
+        ]);
+
+        // Preserve reviewed messages without exposing arbitrary server errors.
+        const message = values.find(
+          (value) =>
+            typeof value === "string" &&
+            allowed.has(value),
+        );
+
+        const required = values.some(
+          (value) =>
+            typeof value === "string" &&
+            /^The [a-zA-Z0-9_. -]+ field is required\.$/.test(
+              value,
+            ),
+        );
+
+        return [
+          field,
+          [
+            message ||
+              (
+                required
+                  ? "This field is required."
+                  : validationMessage(field)
+              ),
+          ],
+        ];
+      }),
   );
 }
 
@@ -198,7 +254,9 @@ export async function backendRequest(
   }
 
   const isFormData = body instanceof FormData;
-  const canSendBody = !["GET", "HEAD"].includes(requestMethod);
+  const canSendBody = !["GET", "HEAD"].includes(
+    requestMethod,
+  );
 
   if (
     canSendBody &&
@@ -216,6 +274,7 @@ export async function backendRequest(
       method: requestMethod,
       headers,
       credentials: "include",
+
       body:
         !canSendBody || body === undefined
           ? undefined
@@ -226,10 +285,13 @@ export async function backendRequest(
 
     text = await response.text();
   } catch {
-    // انقطاع الاتصال لا يعني بالضرورة فشل إنشاء الطلب أو تنفيذ الدفع.
-    const message = String(path).startsWith("/api/paypal/")
+    // A connection failure does not prove that an order or payment failed.
+    const message = String(path).startsWith(
+      "/api/paypal/",
+    )
       ? "Unable to confirm the payment status. Please check your order or contact us before trying another payment."
-      : path === "/api/orders" && requestMethod === "POST"
+      : path === "/api/orders" &&
+          requestMethod === "POST"
         ? "We could not confirm your order. Please contact us before placing it again."
         : "Unable to connect. Please check your internet connection and try again.";
 
@@ -314,7 +376,10 @@ export async function authRequest(action, body = {}) {
   };
 
   if (
-    !Object.prototype.hasOwnProperty.call(routes, action)
+    !Object.prototype.hasOwnProperty.call(
+      routes,
+      action,
+    )
   ) {
     throw createError(
       "This action is unavailable. Please reload the page.",
@@ -368,7 +433,9 @@ export async function authRequest(action, body = {}) {
       payload = {
         current_password:
           body.current_password ?? body.current,
+
         password: body.password,
+
         password_confirmation:
           body.password_confirmation ??
           body.confirm ??
@@ -381,10 +448,13 @@ export async function authRequest(action, body = {}) {
       break;
   }
 
-  const result = await backendRequest(routes[action], {
-    method,
-    body: payload,
-  });
+  const result = await backendRequest(
+    routes[action],
+    {
+      method,
+      body: payload,
+    },
+  );
 
   if (action === "login") {
     if (Number(result.user?.is_admin) !== 1) {
