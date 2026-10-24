@@ -1675,7 +1675,7 @@ function downloadStatsReport() {
     <header
       class="d-flex align-items-center justify-content-between border-bottom border-[var(--border-2)] px-4 py-4 px-md-5 cream-panel"
     >
-      <div class="d-flex align-items-center gap-3">
+      <div class="admin-heading d-flex align-items-center gap-3">
         <button
           class="rounded-circle p-2 border-0 bg-transparent d-lg-none"
           @click="toggleMobileNav()"
@@ -1698,7 +1698,7 @@ function downloadStatsReport() {
           </h1>
         </div>
       </div>
-      <div class="d-flex align-items-center gap-3">
+      <div class="admin-header-actions d-flex align-items-center gap-3">
         <button
           class="rounded-pill bg-dark px-4 py-2 text-sm text-white border-0 transition"
           @click="navigate('index.html')"
@@ -2190,7 +2190,7 @@ function downloadStatsReport() {
             class="settings-card mb-3"
           >
             <div
-              class="d-flex flex-wrap align-items-center justify-content-between gap-3"
+              class="order-card-heading d-flex flex-wrap align-items-center justify-content-between gap-3"
             >
               <div class="d-flex align-items-center flex-wrap gap-3">
                 <span class="font-serif-hero fs-5 fw-bold mb-0">
@@ -2282,7 +2282,7 @@ function downloadStatsReport() {
             </div>
 
             <div
-              class="d-flex flex-wrap gap-3 align-items-center mt-2 text-sm text-muted"
+              class="order-contact-info d-flex flex-wrap gap-3 align-items-center mt-2 text-sm text-muted"
             >
               <span>
                 <i class="bi bi-telephone text-dark"></i>
@@ -2306,7 +2306,7 @@ function downloadStatsReport() {
             </div>
 
             <div
-              class="mt-3 pt-3 border-top d-flex flex-wrap align-items-center justify-content-between gap-2"
+              class="order-card-footer mt-3 pt-3 border-top d-flex flex-wrap align-items-center justify-content-between gap-2"
             >
               <div class="d-flex flex-wrap gap-1">
                 <span
@@ -4255,4 +4255,248 @@ function downloadStatsReport() {
 .payment-option-paid { margin-top: 4px; color: #456d56; }
 .payment-option-paid:hover { background: #e5efe8; }
 .payment-option:disabled { opacity: 0.6; cursor: wait; }
+/* Compact admin layouts. All rules stay inside this component. */
+.admin-main, .admin-main > section, .admin-tab-content {
+  min-width: 0;
+}
+.admin-sidebar {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+.admin-main .row > *, .vue-modal .row > * {
+  min-width: 0;
+}
+.admin-main button, .vue-modal button {
+  touch-action: manipulation;
+}
+.admin-main .badge {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.order-contact-info > span, #currentPartnersList > div > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 991.98px) {
+  .admin-sidebar {
+    width: min(280px, calc(100vw - 48px));
+    padding: 24px 18px max(24px, env(safe-area-inset-bottom));
+  }
+  .admin-sidebar > button {
+    margin-bottom: 24px !important;
+  }
+  .nav-btn {
+    min-height: 44px;
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+  .admin-main > header {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 20px !important;
+  }
+  .admin-heading, .admin-header-actions {
+    min-width: 0;
+    gap: 10px !important;
+  }
+  .admin-heading { flex: 1 1 220px; }
+  #pageTitle {
+    font-size: 24px !important;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .admin-header-actions { flex-wrap: wrap; }
+  .admin-header-actions > button {
+    min-height: 44px;
+    padding: 10px 14px !important;
+    font-size: 12px;
+  }
+  .admin-main > section { padding: 20px !important; }
+  .settings-card {
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 18px;
+  }
+  .admin-main .row.g-4 {
+    --bs-gutter-x: 16px;
+    --bs-gutter-y: 16px;
+  }
+  .admin-main .btn, .vue-modal .btn {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .orders-small-button, .product-page-button {
+    min-height: 44px;
+  }
+  .product-page-button { min-width: 44px; }
+  .vue-modal .modal-dialog {
+    width: auto;
+    max-width: 680px;
+    margin: 16px auto;
+    padding-inline: 12px;
+  }
+  .vue-modal .modal-content {
+    padding: 20px !important;
+    border-radius: 18px !important;
+  }
+  .vue-modal .btn-close {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 10px;
+    background-size: 12px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .admin-main { font-size: 13px; }
+  .admin-main > header {
+    padding: 14px 16px !important;
+    gap: 10px;
+  }
+  .admin-heading { flex-basis: 100%; }
+  .admin-heading > button {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+  #pageTitle { font-size: 23px !important; }
+  .admin-header-actions {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: 100%;
+    gap: 8px !important;
+  }
+  .admin-main > section { padding: 16px 12px 28px !important; }
+  .admin-main .text-sm, .vue-modal .text-sm { font-size: 13px; }
+  .admin-main .text-xs, .vue-modal .text-xs { font-size: 12px; }
+  .admin-main .fs-1 { font-size: 30px !important; }
+  .admin-main .fs-2 { font-size: 29px !important; }
+  .admin-main .fs-3 { font-size: 25px !important; }
+  .admin-main .fs-4, .vue-modal .fs-3, .vue-modal .fs-4 {
+    font-size: 21px !important;
+    line-height: 1.25;
+  }
+  .admin-main .fs-5, .vue-modal .fs-5 { font-size: 18px !important; }
+  .settings-card { padding: 16px; border-radius: 14px; margin-bottom: 16px; }
+  .admin-main .settings-card.mb-0 { margin-bottom: 0; }
+  .admin-main .mb-4 { margin-bottom: 16px !important; }
+  .admin-main .mt-4 { margin-top: 16px !important; }
+  .admin-main .gap-3 { gap: 10px !important; }
+  .admin-main .p-4 { padding: 16px !important; }
+  .admin-main .icon-box-40 { width: 34px; height: 34px; flex-shrink: 0; }
+  .monthly-earnings { margin: 14px 0; align-items: flex-start; }
+  .monthly-earnings strong { font-size: 30px; }
+  .monthly-earnings span { font-size: 12px; }
+  #latestProductsList img { width: 44px !important; height: 44px !important; }
+  #latestProductsList strong { flex-shrink: 0; white-space: nowrap; }
+  .product-table-toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
+  .compact-product-search { width: 100%; max-width: 100%; min-height: 44px; padding: 9px 12px; }
+  .clear-product-search { width: 30px; height: 30px; }
+  #tab-creations .table-responsive { padding: 0 !important; }
+  #tab-creations table { min-width: 540px; }
+  #tab-creations th, #tab-creations td { padding: 12px !important; }
+  #tab-creations td .btn {
+    min-width: 40px;
+    min-height: 40px;
+    margin: 2px !important;
+  }
+  #tab-creations td:last-child { min-width: 160px; }
+  .product-pagination { gap: 10px; margin-top: 14px; }
+  .product-page-buttons { gap: 5px; width: 100%; }
+  .product-page-button { padding: 8px 10px; }
+  .orders-toolbar { gap: 10px; margin-bottom: 16px; }
+  .orders-toolbar-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: 100%;
+  }
+  .orders-search-box { grid-column: 1 / -1; width: 100%; min-height: 44px; }
+  .orders-filter-control > button { width: 100%; }
+  .orders-filter-panel { left: 0; right: auto; width: min(230px, calc(100vw - 56px)); }
+  .order-card-heading { align-items: flex-start !important; }
+  .order-card-heading > div:first-child { flex: 1 1 140px; min-width: 0; }
+  .order-card-heading > div:first-child > span { overflow-wrap: anywhere; }
+  .order-card-heading > .text-end { flex: 1 1 140px; min-width: 0; }
+  .order-card-heading h5 { font-size: 28px; line-height: 1.1; }
+  .order-contact-info { gap: 8px !important; font-size: 12px !important; }
+  .order-contact-info > span { flex: 1 1 100%; }
+  .order-status-select { min-height: 40px; height: auto !important; max-width: 100%; }
+  .order-payment-trigger { min-height: 40px; padding: 8px 10px; }
+  .order-payment-options { max-width: calc(100vw - 56px); }
+  .order-paypal-details { padding: 10px; font-size: 12px; }
+  .order-card-footer > .d-flex:last-child { width: 100%; justify-content: flex-end; }
+  .notification-card { display: grid; grid-template-columns: 34px minmax(0, 1fr); padding: 16px; gap: 10px; border-radius: 14px; }
+  .notification-message-icon { width: 34px; height: 34px; border-radius: 10px; }
+  .notification-copy { min-width: 0; }
+  .notification-copy strong { font-size: 14px; overflow-wrap: anywhere; }
+  .notification-copy > span:first-child { flex-wrap: wrap; }
+  .notification-body { font-size: 12px; line-height: 1.65; }
+  .notification-meta {
+    grid-column: 2;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .notification-time, .notification-reference { white-space: normal; overflow-wrap: anywhere; }
+  #tab-notifications > div:first-child > button { width: 100%; }
+  #tab-settings .settings-card > .d-flex:first-child { align-items: flex-start !important; flex-wrap: wrap; gap: 10px; }
+  #tab-settings .settings-card > .d-flex:first-child > div { min-width: 0; flex: 1 1 180px; }
+  #tab-settings .settings-card > .d-flex:first-child > button { margin-left: auto; padding: 8px 12px !important; }
+  #currentPartnersList > div { flex-wrap: wrap; gap: 10px !important; }
+  #currentPartnersList > div > div { flex-basis: calc(100% - 60px); }
+  #currentPartnersList > div > button { margin-left: auto; }
+  #tab-impact .form-select { max-width: 100%; }
+  #tab-impact .settings-card > .d-flex { flex-wrap: wrap; gap: 12px; }
+  #tab-impact .settings-card > .d-flex > div { min-width: 0; }
+  #monthSalesDetails .d-flex { flex-wrap: wrap; gap: 5px; }
+  #monthSalesDetails .d-flex > span { overflow-wrap: anywhere; }
+  .vue-modal .modal-dialog {
+    margin: 8px auto;
+    padding-inline: 8px;
+    min-height: calc(100% - 16px);
+  }
+  .vue-modal .modal-content { padding: 16px !important; border-radius: 16px !important; min-width: 0; }
+  .vue-modal .modal-content > .d-flex:first-child { gap: 10px; }
+  .vue-modal .form-label { font-size: 12px; margin-bottom: 6px; }
+  /* Keep editable controls at 16px to prevent iOS focus zoom. */
+  .admin-main input, .admin-main textarea, .admin-main select,
+  .vue-modal input, .vue-modal textarea, .vue-modal select {
+    font-size: 16px !important;
+    min-height: 44px;
+    max-width: 100%;
+  }
+  .vue-modal textarea { min-height: 100px; }
+  .vue-modal .btn { min-height: 44px; padding: 9px 12px !important; font-size: 12px; }
+  .vue-modal .mt-4 { margin-top: 16px !important; }
+  .vue-modal .mb-4 { margin-bottom: 16px !important; }
+  .vue-modal .input-group { min-width: 0; }
+  .vue-modal .input-group > .form-control { min-width: 0; overflow-wrap: anywhere; }
+  .product-image-grid { gap: 12px; padding: 6px 4px; }
+  .product-image-tile { width: 76px; height: 76px; }
+  .product-image-remove { width: 32px; height: 32px; right: -7px; top: -7px; }
+  #detProdImagesGrid { max-height: 150px !important; }
+  #detProdImagesGrid img { width: 110px !important; height: 110px !important; }
+  #productDetailsModal .modal-content > .d-flex:last-child { flex-wrap: wrap; gap: 8px; }
+  #productDetailsModal .modal-content > .d-flex:last-child > button { flex: 1 1 140px; }
+}
+
+@media (max-width: 359.98px) {
+  .admin-main > section { padding-inline: 10px !important; }
+  .settings-card { padding: 14px; }
+  .vue-modal .row > .col-6 { flex: 0 0 100%; width: 100%; }
+  .order-card-heading > .text-end { text-align: left !important; }
+  .order-payment-control { margin-left: 0; }
+  .order-payment-options { left: 0; right: auto; }
+}
+
 </style>
