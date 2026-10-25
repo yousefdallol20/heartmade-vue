@@ -391,7 +391,7 @@ function scrollWorkshop(direction) {
           <span class="dot"></span>
           <span>Success stories</span>
         </div>
-        <h2>Our Renowned Clients</h2>
+        <h2>Impact Partners</h2>
       </div>
 
       <div v-if="partnersLoading" class="clients-empty" role="status">
@@ -576,46 +576,55 @@ function scrollWorkshop(direction) {
   object-fit: cover;
 }
 
+/* Show the complete image first, followed by the hero copy. */
 .hero-section {
+  display: block;
+  min-height: 0;
+  padding: 82px 0 24px;
   background: #fbf8f5 !important;
+  overflow: visible;
 }
 
 .hero-section .hero-bg {
-  background: #fbf8f5 !important;
+  position: relative;
+  inset: auto;
+  width: 100%;
+  overflow: visible;
+  background: transparent !important;
   opacity: 1;
 }
 
 .hero-bg > img {
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-width: 100%;
   object-fit: contain;
-  object-position: center;
   opacity: 1;
   filter: none;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(251, 248, 245, 0.96) 0%,
-    rgba(251, 248, 245, 0.88) 38%,
-    rgba(251, 248, 245, 0.22) 72%,
-    rgba(251, 248, 245, 0.08) 100%
-  );
+  transform: none;
+  border-radius: 0;
 }
 
 .hero-content {
+  position: relative;
   width: min(1180px, 100%);
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 64px) clamp(16px, 4vw, 48px) 24px;
   text-align: left;
 }
 
 .hero-content h1,
 .hero-content p.lead {
-  max-width: 620px;
+  max-width: 800px;
   margin-left: 0;
   margin-right: 0;
+}
+
+.hero-content h1 {
+  font-size: clamp(36px, 5.5vw, 76px);
+  line-height: 1.12;
 }
 
 .hero-content h1 .accent {
@@ -626,15 +635,24 @@ function scrollWorkshop(direction) {
   justify-content: flex-start;
 }
 
+.hero-section .scroll-hint {
+  position: static;
+  transform: none;
+  text-align: center;
+  margin: 8px 16px 0;
+}
+
 .story-text > p:not(.eyebrow) {
   margin-top: 18px;
 }
 
-@media (max-width: 700px) {
-  .hero-overlay {
-    background: rgba(251, 248, 245, 0.78);
+@media (min-width: 640px) {
+  .hero-section {
+    padding-top: 96px;
   }
+}
 
+@media (max-width: 700px) {
   .hero-content {
     text-align: center;
   }
