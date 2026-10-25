@@ -190,7 +190,6 @@ function scrollWorkshop(direction) {
     <section class="hero-section">
       <div class="hero-bg">
         <img :src="heroImage" alt="Heart Made artist painting in the studio" />
-        <div class="hero-overlay"></div>
       </div>
 
       <div class="hero-content">
@@ -589,8 +588,10 @@ function scrollWorkshop(direction) {
 .hero-bg > img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
+  opacity: 1;
+  filter: none;
 }
 
 .hero-overlay {
