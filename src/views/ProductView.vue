@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { useNavigation } from "../composables/navigation.js";
 import { products, addToCart } from "../stores/shop.js";
 import { backendRequest } from "../stores/auth.js";
+import ProductCard from "../components/ProductCard.vue";
 
 const { navigate } = useNavigation();
 const route = useRoute();
@@ -13,6 +14,23 @@ const productError = ref("");
 let productRequestVersion = 0;
 
 const product = computed(() => loadedProduct.value);
+const suggestedProducts = computed(() => {
+  if (!product.value) return [];
+
+  return products.value
+    .filter(
+      (item) =>
+        String(item.id) !== String(product.value.id) &&
+        item.category !== "Soon" &&
+        Number(item.stock) > 0,
+    )
+    .sort(
+      (a, b) =>
+        Number(b.category === product.value.category) -
+        Number(a.category === product.value.category),
+    )
+    .slice(0, 4);
+});
 const includedItems = computed(() =>
   String(product.value?.whats_included || "")
     .split(/\r?\n/)
@@ -134,10 +152,6 @@ function handleAddToCart() {
       </div>
       <div class="pd-info">
         <div>
-          <div class="pd-creator">
-            <i class="bi bi-stars"></i> Created by
-            {{ product.creator || "CLAY STUDIO" }}
-          </div>
           <h1>{{ product.name }}</h1>
           <div
             style="font-size: 13px; color: var(--gray-warm); margin-bottom: 8px"
@@ -172,7 +186,9 @@ function handleAddToCart() {
           <p>
             {{
               product.story ||
-              "Crafted with care by talented hands in our Amman workshop. Each piece represents hours of dedicated craftsmanship, skill building, and creative expression."
+              `Made from the Heart to Bring Joy! ❤️
+              Every drawing is created by young adults with special needs who put their hearts into every sketch and every detail, bringing each piece to life with pride, patience, and pure joy!
+              We hope their artwork brings a little joy to you and your loved ones!`
             }}
           </p>
         </div>
@@ -429,5 +445,66 @@ function handleAddToCart() {
         Back to Store
       </button>
     </div>
+    <section
+      v-if="product && suggestedProducts.length"
+      class="suggested-products"
+      aria-labelledby="suggested-products-title"
+    >
+      <h2 id="suggested-products-title">You may also like</h2>
+      <p>Discover more creations made from the heart.</p>
+
+      <div class="suggested-products-grid">
+        <ProductCard
+          v-for="item in suggestedProducts"
+          :key="item.id"
+          :product="item"
+          catalog
+        />
+      </div>
+    </section>
   </main>
 </template>
+
+<style scoped>
+.suggested-products {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid #e4dbd3;
+}
+
+.suggested-products h2 {
+  margin: 0 0 8px;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(28px, 4vw, 38px);
+}
+
+.suggested-products > p {
+  margin: 0 0 24px;
+  color: var(--gray-warm, #786e68);
+  font-size: 14px;
+}
+
+.suggested-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 991px) {
+  .suggested-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  .suggested-products {
+    margin-top: 40px;
+    padding-top: 24px;
+  }
+
+  .suggested-products-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}
+</style>

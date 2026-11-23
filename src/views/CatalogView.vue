@@ -59,14 +59,16 @@ function resetFilters() {
         >
       </div>
     </div>
-    <div v-if="!products.length" class="catalog-empty" role="status" dir="rtl">
+    <div v-if="!products.length" class="catalog-empty" role="status">
       <i
         class="bi bi-bag-heart"
+        aria-hidden="true"
         style="font-size: 40px; color: var(--terracotta-2)"
       ></i>
       <h2 style="font-size: 22px; margin-top: 20px">
-        No products have been added at this time.
+        New Products are in the Making
       </h2>
+      <p style="margin-top: 8px; color: var(--gray-warm)">Coming Soon</p>
     </div>
     <div class="control-bar" v-if="products.length">
       <div class="control-top-row">
@@ -101,41 +103,46 @@ function resetFilters() {
       </div>
     </div>
     <div
-      class="catalog-empty"
-      id="catalogEmpty"
-      v-if="products.length &amp;&amp; !filteredProducts.length &amp;&amp; activeCategory !== 'Soon'"
-    >
-      <i class="bi bi-bag" style="font-size: 48px; color: var(--border-3)"></i>
-      <h3 class="font-serif-hero" style="font-size: 1.6rem; margin-top: 16px">
-        No products found
-      </h3>
-      <p style="font-size: 13px; color: var(--gray-warm); margin-top: 4px">
-        Try resetting your search query or selecting a different category.
-      </p>
-      <button
-        class="btn-dark-pill"
-        @click="resetFilters()"
-        style="margin-top: 24px; padding: 10px 24px; font-size: 12px"
-        type="button"
-      >
-        Reset Filters
-      </button>
-    </div>
-    <div
-      class="catalog-empty"
-      id="categorySoon"
-      v-if="products.length &amp;&amp; !filteredProducts.length &amp;&amp; activeCategory === 'Soon'"
-    >
-      <h3 class="font-serif-hero" style="font-size: 1.6rem">
-        Our Heart Workers are working their magic! ✨
-      </h3>
-      <p style="font-size: 14px; color: var(--gray-warm); margin-top: 8px">
-        New creations are on the way.
-      </p>
-      <p style="font-size: 14px; color: var(--gray-warm); margin-top: 4px">
-        Come back soon to see what’s made from the heart. 🫶🏼
-      </p>
-    </div>
+  v-if="products.length && !filteredProducts.length"
+  id="catalogEmpty"
+  class="catalog-empty"
+  role="status"
+>
+  <i
+    class="bi bi-bag"
+    aria-hidden="true"
+    style="font-size: 48px; color: var(--border-3)"
+  ></i>
+
+  <h3
+    class="font-serif-hero"
+    style="font-size: 1.6rem; margin-top: 16px"
+  >
+    {{
+      searchQuery.trim()
+        ? "No products found"
+        : "New Products are in the Making"
+    }}
+  </h3>
+
+  <p style="font-size: 13px; color: var(--gray-warm); margin-top: 8px">
+    {{
+      searchQuery.trim()
+        ? "Try another search or select a different category."
+        : "Coming Soon"
+    }}
+  </p>
+
+  <button
+    v-if="searchQuery.trim()"
+    class="btn-dark-pill"
+    @click="resetFilters()"
+    style="margin-top: 24px; padding: 10px 24px; font-size: 12px"
+    type="button"
+  >
+    Reset Filters
+  </button>
+</div>
     <div class="catalog-grid" id="catalogGrid" v-if="filteredProducts.length">
       <ProductCard
         :key="p.id"

@@ -16,8 +16,9 @@ export const fallbackProducts = [
     image_url: handsImage,
     description:
       "A hand-pressed floral greeting card with a blank interior for your personal messages.",
-    story:
-      "Crafted with care by talented hands in our Amman workshop. Each piece represents hours of dedicated craftsmanship, skill building, and creative expression.",
+    story: `Made from the Heart to Bring Joy! ❤️
+      Every drawing is created by young adults with special needs who put their hearts into every sketch and every detail, bringing each piece to life with pride, patience, and pure joy!
+      We hope their artwork brings a little joy to you and your loved ones!`,
     stock: 50,
     featured: true,
   },
@@ -30,8 +31,9 @@ export const fallbackProducts = [
     image_url: workshopImage,
     description:
       "Recycled paper notebook bound meticulously for your daily notes and sketches.",
-    story:
-      "Crafted with care by talented hands in our Amman workshop. Each piece represents hours of dedicated craftsmanship, skill building, and creative expression.",
+    story: `Made from the Heart to Bring Joy! ❤️
+      Every drawing is created by young adults with special needs who put their hearts into every sketch and every detail, bringing each piece to life with pride, patience, and pure joy!
+      We hope their artwork brings a little joy to you and your loved ones!`,
     stock: 30,
     featured: true,
   },

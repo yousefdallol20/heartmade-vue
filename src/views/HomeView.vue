@@ -21,12 +21,15 @@ import corporateImage from "../assets/images/corporates-03.png";
 const { navigate } = useNavigation();
 
 const partners = ref([]);
+const homeProducts = ref([]);
 const partnersError = ref("");
 const partnersLoading = ref(true);
 
 const openPartner = ref("");
 const copiedPartnerField = ref("");
 const partnerCopyError = ref("");
+
+const productSlider = ref(null);
 
 let copyTimer;
 
@@ -39,7 +42,6 @@ function partnerHref(value) {
 
   if (!link) return null;
 
-  // تحويل البريد إلى رابط مراسلة
   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(link)) {
     return `mailto:${link}`;
   }
@@ -58,7 +60,6 @@ const partnerSlides = computed(() => {
 
   if (!items.length) return [];
 
-  // تكرار الصور لضمان حركة الشريط
   const repetitions = Math.max(1, Math.ceil(8 / items.length));
 
   return Array.from({ length: repetitions }, (_, repetition) =>
@@ -92,7 +93,6 @@ function handleEscape(event) {
   if (event.key === "Escape") {
     closePartner();
 
-    // إزالة التركيز عند إغلاق البوكس بلوحة المفاتيح
     const element = document.activeElement;
 
     if (element instanceof HTMLElement && element.closest(".partner-item")) {
@@ -102,7 +102,6 @@ function handleEscape(event) {
 }
 
 function handleViewportChange() {
-  // إغلاق الحالة المفتوحة عند تغيير حجم الشاشة
   closePartner();
 }
 
@@ -140,18 +139,15 @@ onMounted(async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Could not load partnerships.");
+      throw new Error("Could not load home data.");
     }
 
     const result = await response.json();
 
-    if (!Array.isArray(result.data?.partners)) {
-      throw new Error("Invalid partnerships response.");
-    }
-
-    partners.value = result.data.partners;
+    partners.value = result.data?.partners || [];
+    homeProducts.value = result.data?.products || [];
   } catch (error) {
-    partnersError.value = error.message || "Could not load partnerships.";
+    partnersError.value = error.message || "Could not load home data.";
   } finally {
     partnersLoading.value = false;
   }
@@ -180,6 +176,15 @@ const gallery = [
 function scrollWorkshop(direction) {
   document.getElementById("workshopSlider")?.scrollBy({
     left: direction === "right" ? 250 : -250,
+    behavior: "smooth",
+  });
+}
+
+function scrollProducts(direction) {
+  if (!productSlider.value) return;
+  const scrollAmount = productSlider.value.clientWidth * 0.85;
+  productSlider.value.scrollBy({
+    left: direction === "right" ? scrollAmount : -scrollAmount,
     behavior: "smooth",
   });
 }
@@ -252,9 +257,9 @@ function scrollWorkshop(direction) {
         </p>
 
         <p>
-          When you choose a Heart Made product, you recognise the value of
-          their work and help create opportunities for them to earn, grow and
-          build greater independence.
+          When you choose a Heart Made product, you recognise the value of their
+          work and help create opportunities for them to earn, grow and build
+          greater independence.
         </p>
 
         <button
@@ -268,7 +273,7 @@ function scrollWorkshop(direction) {
     </section>
 
     <section class="shop-section" id="shop" style="scroll-margin-top: 64px">
-      <template v-if="products.length">
+      <template v-if="homeProducts.length">
         <div class="shop-head">
           <div>
             <p class="eyebrow">Featured Showcase</p>
@@ -295,12 +300,32 @@ function scrollWorkshop(direction) {
           </button>
         </div>
 
-        <div class="product-grid" id="homeProductGrid">
-          <ProductCard
-            v-for="p in products.slice(0, 4)"
-            :key="p.id"
-            :product="p"
-          />
+        <div class="mobile-products-carousel-wrap">
+          <button
+            type="button"
+            class="mobile-slider-arrow prev"
+            aria-label="Previous products"
+            @click="scrollProducts('left')"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <div
+            ref="productSlider"
+            class="product-grid no-scrollbar"
+            id="homeProductGrid"
+          >
+            <ProductCard v-for="p in homeProducts" :key="p.id" :product="p" />
+          </div>
+
+          <button
+            type="button"
+            class="mobile-slider-arrow next"
+            aria-label="Next products"
+            @click="scrollProducts('right')"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
         </div>
 
         <div class="shop-more">
@@ -316,7 +341,14 @@ function scrollWorkshop(direction) {
 
       <div v-else class="products-empty" role="status">
         <i class="bi bi-bag-heart" aria-hidden="true"></i>
-        <p>No products have been added at this time.</p>
+        <p>
+          New Products are in the Making<br />
+          <span
+            style="display: inline-block; margin-top: 8px; font-size: 0.85em"
+          >
+            Coming Soon
+          </span>
+        </p>
       </div>
     </section>
 
@@ -576,7 +608,6 @@ function scrollWorkshop(direction) {
   object-fit: cover;
 }
 
-/* Show the complete image first, followed by the hero copy. */
 .hero-section {
   display: block;
   min-height: 0;
@@ -646,6 +677,68 @@ function scrollWorkshop(direction) {
   margin-top: 18px;
 }
 
+/* حاوية السلايدر وأسهم التنقل */
+.mobile-products-carousel-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.mobile-slider-arrow {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .shop-section .shop-head h2 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  .shop-section .shop-head-right p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .shop-section .chip-row .chip {
+    font-size: 15px;
+    padding: 9px 18px;
+  }
+
+  .mobile-slider-arrow {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #d9c9bd;
+    background: rgba(255, 253, 251, 0.96);
+    color: #332d29;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  }
+
+  .mobile-slider-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .mobile-slider-arrow.prev {
+    left: 4px;
+  }
+
+  .mobile-slider-arrow.next {
+    right: 4px;
+  }
+
+  .shop-section .shop-more .btn-outline-dark-pill {
+    font-size: 16px;
+    padding: 13px 26px;
+  }
+}
+
 @media (min-width: 640px) {
   .hero-section {
     padding-top: 96px;
@@ -700,7 +793,6 @@ function scrollWorkshop(direction) {
   will-change: transform;
 }
 
-/* أربعة كروت على الكمبيوتر */
 .partner-item {
   position: relative;
   flex: 0 0 calc((100cqw - 72px) / 4);
@@ -745,7 +837,6 @@ a.partner-logo {
   outline-offset: 3px;
 }
 
-/* زر إظهار المعلومات دون التأثير على رابط الصورة */
 .partner-details-toggle {
   position: absolute;
   top: 12px;
@@ -790,7 +881,6 @@ a.partner-logo {
     visibility 0.2s ease;
 }
 
-/* إظهار البوكس عند فتحه صراحة أو التنقل بلوحة المفاتيح */
 .partner-item.is-open .partner-info,
 .partner-item:has(:focus-visible) .partner-info {
   opacity: 1;
@@ -799,13 +889,11 @@ a.partner-logo {
   transform: translateY(0);
 }
 
-/* التركيز الناتج عن النقر العادي لا يوقف الشريط */
 .partner-ticker.details-open .partner-ticker-track,
 .partner-ticker:has(:focus-visible) .partner-ticker-track {
   animation-play-state: paused;
 }
 
-/* تفعيل تأثير الماوس فقط للأجهزة التي تدعم تمرير المؤشر */
 @media (hover: hover) and (pointer: fine) {
   .partner-item:hover .partner-info {
     opacity: 1;
@@ -926,7 +1014,6 @@ a.partner-logo {
   }
 }
 
-/* صورتان على الشاشات المتوسطة */
 @media (max-width: 900px) {
   .partner-item {
     flex-basis: calc((100cqw - 24px) / 2);
@@ -934,7 +1021,6 @@ a.partner-logo {
   }
 }
 
-/* زيادة ارتفاع الصورة لاستيعاب التفاصيل على الهاتف */
 @media (max-width: 600px) {
   .clients-section {
     padding-top: 40px;
@@ -972,7 +1058,6 @@ a.partner-logo {
   }
 }
 
-/* احترام إعداد تقليل الحركة */
 @media (prefers-reduced-motion: reduce) {
   .partner-ticker {
     overflow-x: auto;
@@ -992,6 +1077,60 @@ a.partner-logo {
 
   .partner-item:hover .partner-logo img {
     transform: none;
+  }
+}
+</style>
+<style>
+/* فرض السلايدر الأفقي وتكبير الخطوط على الجوال والأجهزة اللوحية */
+@media (max-width: 1024px) {
+  #homeProductGrid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 16px !important;
+    padding: 8px 12px 20px !important;
+    width: 100% !important;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  #homeProductGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* كل بطاقة منتج تأخذ 85% من عرض الشاشة لتبدو احترافية مثل الفيديو */
+  #homeProductGrid > * {
+    flex: 0 0 85% !important;
+    width: 85% !important;
+    min-width: 85% !important;
+    max-width: 85% !important;
+    scroll-snap-align: center !important;
+  }
+
+  /* تكبير العنوان أياً كان الوسم */
+  #homeProductGrid .product-info-row p,
+  #homeProductGrid .product-info h3,
+  #homeProductGrid .product-title {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+  }
+
+  /* تكبير السعر */
+  #homeProductGrid .product-info-row strong,
+  #homeProductGrid .product-price {
+    font-size: 19px !important;
+    font-weight: 700 !important;
+  }
+
+  /* تكبير الوصف أو التصنيف */
+  #homeProductGrid .product-cat,
+  #homeProductGrid .product-desc {
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    margin-top: 6px !important;
   }
 }
 </style>
